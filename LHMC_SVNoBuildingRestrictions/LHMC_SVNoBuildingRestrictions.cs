@@ -83,21 +83,17 @@ namespace LHMC_SVNoBuildingRestrictions
                             if (otherCol.name == "DockingControl")
                             {
                                 AIStationControl aisc = otherCol.gameObject.transform.parent.GetComponentInChildren<AIStationControl>();
-                                if (aisc != null)
+                                if (aisc != null && aisc.station != null && (aisc.station.HasDocking(false) && !DockingUI.inst.dockingPanel.activeSelf) &&
+                                      (GameData.data.gameMode == 1 || aisc.station.IsPlayerFriendly || aisc.station.Disabled) &&
+                                      (aisc == null || (aisc.ss != null && !aisc.ss.ffSys.TargetIsEnemy(__instance.GetSpaceShip.ffSys))))
                                 {
                                     if (station != null)
                                     {
-
-                                        if ((aisc.station.HasDocking(false) && !DockingUI.inst.dockingPanel.activeSelf) &&
-                                          (GameData.data.gameMode == 1 || aisc.station.IsPlayerFriendly || aisc.station.Disabled) &&
-                                          (aisc == null || (aisc.ss != null && !aisc.ss.ffSys.TargetIsEnemy(__instance.GetSpaceShip.ffSys))))
+                                        float distNew = Vector3.Distance(__instance.GetSpaceShip.transform.position, aisc.gameObject.transform.position);
+                                        if (distNew < distCur)
                                         {
-                                            float distNew = Vector3.Distance(__instance.GetSpaceShip.transform.position, aisc.gameObject.transform.position);
-                                            if (distNew < distCur)
-                                            {
-                                                station = aisc.station;
-                                                distCur = distNew;
-                                            }
+                                            station = aisc.station;
+                                            distCur = distNew;
                                         }
                                     }
                                     else
@@ -122,6 +118,7 @@ namespace LHMC_SVNoBuildingRestrictions
                     AccessTools.Method(typeof(ShipInfo), nameof(ShipInfo.OpenClose)).Invoke(si, null);
                 }
             }
+
             return false;
         }
     }
