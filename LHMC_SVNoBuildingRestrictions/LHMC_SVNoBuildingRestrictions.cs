@@ -85,16 +85,19 @@ namespace LHMC_SVNoBuildingRestrictions
                                 AIStationControl aisc = otherCol.gameObject.transform.parent.GetComponentInChildren<AIStationControl>();
                                 if (aisc != null)
                                 {
-                                    if (station != null &&
-                                        (aisc.station.HasDocking(false) && !DockingUI.inst.dockingPanel.activeSelf) &&
-                                        (GameData.data.gameMode == 1 || aisc.station.IsPlayerFriendly || aisc.station.Disabled) &&
-                                        (aisc == null || (aisc.ss != null && !aisc.ss.ffSys.TargetIsEnemy(__instance.GetSpaceShip.ffSys))))
+                                    if (station != null)
                                     {
-                                        float distNew = Vector3.Distance(__instance.GetSpaceShip.transform.position, aisc.gameObject.transform.position);
-                                        if (distNew < distCur)
+
+                                        if ((aisc.station.HasDocking(false) && !DockingUI.inst.dockingPanel.activeSelf) &&
+                                          (GameData.data.gameMode == 1 || aisc.station.IsPlayerFriendly || aisc.station.Disabled) &&
+                                          (aisc == null || (aisc.ss != null && !aisc.ss.ffSys.TargetIsEnemy(__instance.GetSpaceShip.ffSys))))
                                         {
-                                            station = aisc.station;
-                                            distCur = distNew;
+                                            float distNew = Vector3.Distance(__instance.GetSpaceShip.transform.position, aisc.gameObject.transform.position);
+                                            if (distNew < distCur)
+                                            {
+                                                station = aisc.station;
+                                                distCur = distNew;
+                                            }
                                         }
                                     }
                                     else
@@ -119,7 +122,6 @@ namespace LHMC_SVNoBuildingRestrictions
                     AccessTools.Method(typeof(ShipInfo), nameof(ShipInfo.OpenClose)).Invoke(si, null);
                 }
             }
-
             return false;
         }
     }
